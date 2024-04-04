@@ -138,7 +138,7 @@
 
 <script>
 import { db } from '@/firebase/firebase'
-import { collection, getDocs, query, where, or, and } from 'firebase/firestore'
+import { collection, getDocs, query, where, } from 'firebase/firestore'
 
 // create a reference to the hospitals collection
 const hospitalsRef = collection(db, "hospitals");

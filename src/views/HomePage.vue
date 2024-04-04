@@ -1,11 +1,21 @@
+<script setup>
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faMedkit, faBars, faHospital, faFilter, faFileText } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faMedkit, faBars, faHospital, faFilter, faFileText)
+
+</script>
 <template>
   <div class="container">
     <nav>
       <div class="logo">
-        <img src="/logo.svg" alt="" />
+        <img src="@/assets/logo.svg" alt="" />
       </div>
-      <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
-      <span class="hidden"><i class="fa fa-times fa-2x" aria-hidden="true"></i></span>
+      <FontAwesomeIcon :icon="faBars" size="2x" />
+      <span class="hidden">
+        <FontAwesomeIcon :icon="faTimes" />
+      </span>
       <ul class="hidden">
         <li><a href="#">About</a></li>
         <li><a href="#">Blog</a></li>
@@ -20,7 +30,7 @@
           <h1>Find, Export, and Share Hospitals within your Region.</h1>
         </div>
 
-        <a href="./search.html">Find Hospitals</a>
+        <a href="#">Find Hospitals</a>
       </div>
     </header>
     <main>
@@ -28,7 +38,7 @@
       <div class="grid-container">
         <div class="detail-card">
           <div class="name">
-            <i class="fa fa-search fa-2x" aria-hidden="true"></i>
+            <FontAwesomeIcon :icon="faSearch" size="2x" />
             &nbsp;
             <h3>Search</h3>
           </div>
@@ -43,7 +53,7 @@
         </div>
         <div class="detail-card">
           <div class="name">
-            <i class="fa fa-filter fa-2x" aria-hidden="true"></i>
+            <FontAwesomeIcon :icon="faFilter" size="2x" />
             &nbsp;
             <h3>Filter</h3>
           </div>
@@ -59,7 +69,7 @@
 
         <div class="detail-card">
           <div class="name">
-            <i class="fa fa-file-text fa-2x" aria-hidden="true"></i>
+            <FontAwesomeIcon :icon="faFileText" size="2x" />
             &nbsp;
             <h3>Export</h3>
           </div>
@@ -73,7 +83,7 @@
         </div>
         <div class="detail-card">
           <div class="name">
-            <i class="fa fa-share-alt fa-2x" aria-hidden="true"></i>
+            <FontAwesomeIcon :icon="faShareAlt" size="2x" />
             &nbsp;
             <h3>Share</h3>
           </div>
@@ -100,11 +110,11 @@
             alt="" />
           <div class="content">
             <div class="name">
-              <i class="fa fa-hospital" aria-hidden="true"></i>&nbsp;
+              <FontAwesomeIcon :icon="faHospital" />&nbsp;
               <h3>Havana Specialist Hospital Limited</h3>
             </div>
             <div class="type">
-              <img src="./hospital.svg" alt="" />
+              <img src="@/assets/hospital.svg" alt="" />
               &nbsp;
               <span>Hospital</span>
             </div>
@@ -114,11 +124,11 @@
                 100001</span>
             </div>
             <div class="phone">
-              <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
+              <FontAwesomeIcon :icon="faPhone" /> &nbsp;
               <span>08027272727</span>
             </div>
             <div class="email">
-              <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;
+              <FontAwesomeIcon :icon="faEnvelope" />&nbsp;
               <span>info@havanaspecialisthospital.com</span>
             </div>
           </div>
@@ -128,11 +138,11 @@
             alt="" />
           <div class="content">
             <div class="name">
-              <i class="fa fa-hospital" aria-hidden="true"></i>&nbsp;
+              <FontAwesomeIcon :icon="faHospital" />&nbsp;
               <h3>Lagos State University Primary Health Care Centre</h3>
             </div>
             <div class="type">
-              <i class="fa fa-medkit" aria-hidden="true"></i>&nbsp;
+              <FontAwesomeIcon :icon="faMedkit" />&nbsp;
               <span>Clinic</span>
             </div>
             <div class="address">
@@ -140,11 +150,11 @@
               <span>Ojo, Lagos 102101, Lagos</span>
             </div>
             <div class="phone">
-              <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
+              <FontAwesomeIcon :icon="faPhone" /> &nbsp;
               <span>N/A</span>
             </div>
             <div class="email">
-              <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;
+              <FontAwesomeIcon :icon="faEnvelope" />&nbsp;
               <span>N/A</span>
             </div>
           </div>
@@ -154,11 +164,11 @@
             alt="" />
           <div class="content">
             <div class="name">
-              <i class="fa fa-hospital" aria-hidden="true"></i>&nbsp;
+              <FontAwesomeIcon :icon="faHospital" />&nbsp;
               <h3>Marigold Hospital</h3>
             </div>
             <div class="type">
-              <img src="./hospital.svg" alt="" />&nbsp;
+              <img src="@/assets/hospital.svg" alt="" />&nbsp;
               <span>Hospital</span>
             </div>
             <div class="address">
@@ -166,11 +176,11 @@
               <span>12/14 Adeniyi Adefioye Street, Ikate, Lagos 101241, Lagos</span>
             </div>
             <div class="phone">
-              <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
+              <FontAwesomeIcon :icon="faPhone" /> &nbsp;
               <span>08033925500</span>
             </div>
             <div class="email">
-              <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;
+              <FontAwesomeIcon :icon="faEnvelope" />&nbsp;
               <span>N/A</span>
             </div>
           </div>
@@ -192,7 +202,7 @@
     </main>
     <footer>
       <div class="footer-logo">
-        <img src="/logo.svg" alt="" />
+        <img src="@/assets/logo.svg" alt="" />
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias
           minus ab, suscipit praesentium quibusdam inventore at reprehenderit
@@ -200,9 +210,9 @@
         </p>
       </div>
       <div class="socials">
-        <a href=""><img src="/facebook-icon.svg" alt="" /></a>
+        <a href=""><img src="@/assets/facebook-icon.svg" alt="" /></a>
         <a href="
-          #"><img src="/x-icon.svg" alt="" /></a>
+          #"><img src="@/assets/x-icon.svg" alt="" /></a>
       </div>
 
       <div class="useful-links">
@@ -225,7 +235,7 @@
       </div>
 
       <div class="copy">
-        <i class="fa fa-copyright" aria-hidden="true"></i> &nbsp;
+        <FontAwesomeIcon :icon="faCopyright" size="lg" /> &nbsp;
         <span>2024</span>
         &nbsp;
         <a href="https://github.com/dmystical-coder">dmystical-coder</a>
