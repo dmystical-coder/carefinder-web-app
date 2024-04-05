@@ -1,16 +1,82 @@
+<script>
+import { db } from '@/firebase/firebase'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faMedkit, faBars, faHospital, faFilter, faFileExport, faMapLocationDot } from '@fortawesome/free-solid-svg-icons'
+import { collection, getDocs, query, where, } from 'firebase/firestore'
+
+// create a reference to the hospitals collection
+const hospitalsRef = collection(db, "hospitals");
+library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faMedkit, faBars, faHospital, faFilter, faFileExport, faMapLocationDot)
+export default {
+  name: 'HospitalSearch',
+  components: { FontAwesomeIcon },
+  data: () => ({
+    locationQuery: '',
+    allHospitals: [],
+    searchedHospitals: [],
+  }),
+  created() {
+    this.fetchData()
+  },
+  computed: {
+    validLocationQuery() {
+      return this.locationQuery.replace(
+        /\w\S*/g,
+        function (txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        }
+      );
+    }
+  },
+  methods: {
+    async handleSearch() {
+      this.searchedHospitals = []
+      this.allHospitals = [];
+      try {
+        // Create a query against the collection.
+        const q = query(hospitalsRef, where('city', '==', this.validLocationQuery)
+        );
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          this.searchedHospitals.push({ ...doc.data(), id: doc.id })
+        })
+      }
+      catch (error) {
+        console.error('Error searching hospitals:', error)
+      };
+
+    },
+    async fetchData() {
+      try {
+        const querySnapshot = await getDocs(hospitalsRef)
+        querySnapshot.forEach((doc) => {
+          this.allHospitals.push({ ...doc.data(), id: doc.id })
+          console.log(this.allHospitals)
+        })
+      } catch (error) {
+        console.error('Error searching hospitals:', error)
+      }
+    }
+  }
+}
+</script>
+
 <template>
   <div class="container">
     <header>
       <form @submit.prevent class="search-box">
         <div class="search-input">
-          <i class="fa fa-search" aria-hidden="true"></i>
+          <font-awesome-icon icon='fa-solid fa-search' />
+
           <input type="text" placeholder="Enter your Location..." v-model.lazy.trim="locationQuery"
             @keyup.enter="handleSearch" />
         </div>
 
         <button class="search-btn" @click="handleSearch">
           <span>Search</span>
-          <img src="./search-icon.svg" alt="" />
+          <img src="@/assets/search-icon.svg" alt="" />
         </button>
 
         <!-- <div class="filters">
@@ -70,8 +136,10 @@
           }}</span>
 
         <div>
-          <i class="fa fa-file-text fa-2x" aria-hidden="true"></i>
-          <i class="fa fa-share-alt fa-2x" aria-hidden="true"></i>
+
+          <font-awesome-icon icon='fa-solid fa-file-export' size="2x" style="cursor: pointer" />
+
+          <font-awesome-icon icon='fa-solid fa-share-alt' size="2x" style="cursor: pointer" />
         </div>
       </div>
 
@@ -80,24 +148,28 @@
           <img :src="hospital.img_url" alt="" />
           <div class="content">
             <div class="name">
-              <i class="fa fa-hospital" aria-hidden="true"></i>&nbsp;
+              <font-awesome-icon icon='fa-solid fa-hospital' />
+              &nbsp;
               <h3>{{ hospital.name }}</h3>
             </div>
             <div class="type">
-              <img src="./hospital.svg" alt="" />
+              <img src="@/assets/hospital.svg" alt="" />
               &nbsp;
               <span>Hospital</span>
             </div>
             <div class="address">
-              <img src="./location-marker.svg" /> &nbsp;
+              <font-awesome-icon icon='fa-solid fa-map-location-dot' />
+              &nbsp;
               <span>{{ hospital.address }}</span>
             </div>
             <div class="phone">
-              <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
+              <font-awesome-icon icon='fa-solid fa-phone' />
+              &nbsp;
               <span>{{ hospital.phone_number }}</span>
             </div>
             <div class="email">
-              <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;
+              <font-awesome-icon icon='fa-solid fa-envelope' />
+              &nbsp;
               <span>{{ hospital.email }}</span>
             </div>
           </div>
@@ -108,20 +180,22 @@
           <img :src="hospital.img_url" alt="" />
           <div class="content">
             <div class="name">
-              <i class="fa fa-hospital" aria-hidden="true"></i>&nbsp;
+              <FontAwesomeIcon :icon="faMapLocationDot" />
+              &nbsp;
               <h3>{{ hospital.name }}</h3>
             </div>
             <div class="type">
-              <img src="./hospital.svg" alt="" />
+              <img src="@/assets/hospital.svg" alt="" />
               &nbsp;
               <span>Hospital</span>
             </div>
             <div class="address">
-              <img src="./location-marker.svg" /> &nbsp;
+              <FontAwesomeIcon :icon="faMapLocationDot" /> &nbsp;
               <span>{{ hospital.address }}</span>
             </div>
             <div class="phone">
-              <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
+              <FontAwesomeIcon :icon="faMapLocationDot" />
+              &nbsp;
               <span>{{ hospital.phone_number }}</span>
             </div>
             <div class="email">
@@ -136,68 +210,11 @@
   </div>
 </template>
 
-<script>
-import { db } from '@/firebase/firebase'
-import { collection, getDocs, query, where, } from 'firebase/firestore'
 
-// create a reference to the hospitals collection
-const hospitalsRef = collection(db, "hospitals");
-
-export default {
-  name: 'HospitalSearch',
-  data: () => ({
-    locationQuery: '',
-    allHospitals: [],
-    searchedHospitals: [],
-  }),
-  created() {
-    this.fetchData()
-  },
-  computed: {
-    validLocationQuery() {
-      return this.locationQuery.replace(
-        /\w\S*/g,
-        function (txt) {
-          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-        }
-      );
-    }
-  },
-  methods: {
-    async handleSearch() {
-      this.searchedHospitals = []
-      this.allHospitals = [];
-      try {
-        // Create a query against the collection.
-        const q = query(hospitalsRef, where('city', '==', this.validLocationQuery)
-        );
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          this.searchedHospitals.push({ ...doc.data(), id: doc.id })
-        })
-      }
-      catch (error) {
-        console.error('Error searching hospitals:', error)
-      };
-
-    },
-    async fetchData() {
-      try {
-        const querySnapshot = await getDocs(hospitalsRef)
-        querySnapshot.forEach((doc) => {
-          this.allHospitals.push({ ...doc.data(), id: doc.id })
-          console.log(this.allHospitals)
-        })
-      } catch (error) {
-        console.error('Error searching hospitals:', error)
-      }
-    }
-  }
-}
-</script>
 
 <style scoped>
+/* Include Font Awesome CSS */
+
 /* Add your styles here */
 .search-box {
   display: flex;
@@ -275,12 +292,9 @@ input::placeholder {
 
 .search-result-text-box>div {
   display: flex;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
-.search-result-text-box i {
-  color: #ffffff;
-}
 
 @media screen and (min-width: 768px) {
   .search-result-text-box {

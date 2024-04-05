@@ -1,9 +1,9 @@
 <script setup>
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faMedkit, faBars, faHospital, faFilter, faFileText } from '@fortawesome/free-solid-svg-icons'
+import { faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faMedkit, faBars, faHospital, faFilter, faFileText, faMapLocationDot } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faMedkit, faBars, faHospital, faFilter, faFileText)
+library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faMedkit, faBars, faHospital, faFilter, faFileText, faMapLocationDot)
 
 </script>
 <template>
@@ -119,7 +119,8 @@ library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faM
               <span>Hospital</span>
             </div>
             <div class="address">
-              <img src="./location-marker.svg" /> &nbsp;
+              <FontAwesomeIcon :icon="faMapLocationDot" />
+              &nbsp;
               <span>115 Akerele Extension, 115 Akerele Road, Surulere, Lagos
                 100001</span>
             </div>
@@ -146,7 +147,8 @@ library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faM
               <span>Clinic</span>
             </div>
             <div class="address">
-              <img src="./location-marker.svg" /> &nbsp;
+              <FontAwesomeIcon :icon="faMapLocationDot" />
+              &nbsp;
               <span>Ojo, Lagos 102101, Lagos</span>
             </div>
             <div class="phone">
@@ -168,11 +170,13 @@ library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faM
               <h3>Marigold Hospital</h3>
             </div>
             <div class="type">
-              <img src="@/assets/hospital.svg" alt="" />&nbsp;
+              <img src="@/assets/hospital.svg" alt="">
+              &nbsp;
               <span>Hospital</span>
             </div>
             <div class="address">
-              <img src="./location-marker.svg" /> &nbsp;
+              <FontAwesomeIcon :icon="faMapLocationDot" /> 
+              &nbsp;
               <span>12/14 Adeniyi Adefioye Street, Ikate, Lagos 101241, Lagos</span>
             </div>
             <div class="phone">

@@ -3,8 +3,13 @@ import HospitalSearch from '@/components/HospitalSearch.vue'
 
 </script>
 <template>
-  <div>
-    <h1>Dashboard</h1>
-  </div>
-  <HospitalSearch />
+  <header>
+
+  </header>
+  <main>
+    <HospitalSearch />
+  </main>
+  <footer>
+    
+  </footer>
 </template>
