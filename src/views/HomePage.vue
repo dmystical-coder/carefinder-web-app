@@ -1,10 +1,35 @@
 <script setup>
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faMedkit, faBars, faHospital, faFilter, faFileText, faMapLocationDot } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPhone,
+  faEnvelope,
+  faCopyright,
+  faSearch,
+  faTimes,
+  faShareAlt,
+  faMedkit,
+  faBars,
+  faHospital,
+  faFilter,
+  faFileText,
+  faMapLocationDot
+} from '@fortawesome/free-solid-svg-icons'
 
-library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faMedkit, faBars, faHospital, faFilter, faFileText, faMapLocationDot)
-
+library.add(
+  faPhone,
+  faEnvelope,
+  faCopyright,
+  faSearch,
+  faTimes,
+  faShareAlt,
+  faMedkit,
+  faBars,
+  faHospital,
+  faFilter,
+  faFileText,
+  faMapLocationDot
+)
 </script>
 <template>
   <div class="container">
@@ -30,7 +55,7 @@ library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faM
           <h1>Find, Export, and Share Hospitals within your Region.</h1>
         </div>
 
-        <a href="#">Find Hospitals</a>
+        <router-link to="/dashboard">Find Hospitals</router-link>
       </div>
     </header>
     <main>
@@ -45,9 +70,8 @@ library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faM
           <hr />
           <div class="type">
             <p>
-              Carefinder allows users to search for hospitals within their
-              region, and view the list of hospitals and their respective
-              contact details.
+              Carefinder allows users to search for hospitals within their region, and view the list
+              of hospitals and their respective contact details.
             </p>
           </div>
         </div>
@@ -60,9 +84,8 @@ library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faM
           <hr />
           <div class="type">
             <p>
-              Carefinder lists hospitals based on the user's location or based
-              on the user's selection from a list of nearby cities within the
-              area.
+              Carefinder lists hospitals based on the user's location or based on the user's
+              selection from a list of nearby cities within the area.
             </p>
           </div>
         </div>
@@ -76,8 +99,8 @@ library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faM
           <hr />
           <div class="type">
             <p>
-              Carefinder allows users to export the list of hospitals to a CSV
-              file, making it easy to save and share the information.
+              Carefinder allows users to export the list of hospitals to a CSV file, making it easy
+              to save and share the information.
             </p>
           </div>
         </div>
@@ -90,9 +113,8 @@ library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faM
           <hr />
           <div class="type">
             <p>
-              Carefinder also allows users to share the list of hospitals with
-              others. Users can share the information via email or by
-              generating a shareable link.
+              Carefinder also allows users to share the list of hospitals with others. Users can
+              share the information via email or by generating a shareable link.
             </p>
           </div>
         </div>
@@ -106,8 +128,10 @@ library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faM
                 alt=""
               />
             </div> -->
-          <img src="https://lh5.googleusercontent.com/p/AF1QipOWSZ0l_Xety_7BDoj0BiYjh8dQ771UeVr2FxXy=w408-h306-k-no"
-            alt="" />
+          <img
+            src="https://lh5.googleusercontent.com/p/AF1QipOWSZ0l_Xety_7BDoj0BiYjh8dQ771UeVr2FxXy=w408-h306-k-no"
+            alt=""
+          />
           <div class="content">
             <div class="name">
               <FontAwesomeIcon :icon="faHospital" />&nbsp;
@@ -121,8 +145,7 @@ library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faM
             <div class="address">
               <FontAwesomeIcon :icon="faMapLocationDot" />
               &nbsp;
-              <span>115 Akerele Extension, 115 Akerele Road, Surulere, Lagos
-                100001</span>
+              <span>115 Akerele Extension, 115 Akerele Road, Surulere, Lagos 100001</span>
             </div>
             <div class="phone">
               <FontAwesomeIcon :icon="faPhone" /> &nbsp;
@@ -135,8 +158,10 @@ library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faM
           </div>
         </div>
         <div class="detail-card">
-          <img src="https://lh5.googleusercontent.com/p/AF1QipMfy1m5p2XEkjHpfwy24ytmgNWJvo-c5TzxkzQL=w426-h240-k-no"
-            alt="" />
+          <img
+            src="https://lh5.googleusercontent.com/p/AF1QipMfy1m5p2XEkjHpfwy24ytmgNWJvo-c5TzxkzQL=w426-h240-k-no"
+            alt=""
+          />
           <div class="content">
             <div class="name">
               <FontAwesomeIcon :icon="faHospital" />&nbsp;
@@ -162,20 +187,22 @@ library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faM
           </div>
         </div>
         <div class="detail-card">
-          <img src="https://lh5.googleusercontent.com/p/AF1QipMui4lkCP9J2wHxPdwIN9dTOf_LCrlG7Zg52Wnb=w408-h544-k-no"
-            alt="" />
+          <img
+            src="https://lh5.googleusercontent.com/p/AF1QipMui4lkCP9J2wHxPdwIN9dTOf_LCrlG7Zg52Wnb=w408-h544-k-no"
+            alt=""
+          />
           <div class="content">
             <div class="name">
               <FontAwesomeIcon :icon="faHospital" />&nbsp;
               <h3>Marigold Hospital</h3>
             </div>
             <div class="type">
-              <img src="@/assets/hospital.svg" alt="">
+              <img src="@/assets/hospital.svg" alt="" />
               &nbsp;
               <span>Hospital</span>
             </div>
             <div class="address">
-              <FontAwesomeIcon :icon="faMapLocationDot" /> 
+              <FontAwesomeIcon :icon="faMapLocationDot" />
               &nbsp;
               <span>12/14 Adeniyi Adefioye Street, Ikate, Lagos 101241, Lagos</span>
             </div>
@@ -197,8 +224,8 @@ library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faM
         <div>
           <h3>Become an Admin</h3>
           <p>
-            Join the elite league of admins adding entries to our database,
-            and enlarging our provider network.
+            Join the elite league of admins adding entries to our database, and enlarging our
+            provider network.
           </p>
         </div>
         <a href="#" class="admin-cta-btn">Join Today</a>
@@ -208,15 +235,17 @@ library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faM
       <div class="footer-logo">
         <img src="@/assets/logo.svg" alt="" />
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias
-          minus ab, suscipit praesentium quibusdam inventore at reprehenderit
-          quas officia pariatur!
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias minus ab, suscipit
+          praesentium quibusdam inventore at reprehenderit quas officia pariatur!
         </p>
       </div>
       <div class="socials">
         <a href=""><img src="@/assets/facebook-icon.svg" alt="" /></a>
-        <a href="
-          #"><img src="@/assets/x-icon.svg" alt="" /></a>
+        <a
+          href="
+          #"
+          ><img src="@/assets/x-icon.svg" alt=""
+        /></a>
       </div>
 
       <div class="useful-links">
@@ -274,19 +303,19 @@ library.add(faPhone, faEnvelope, faCopyright, faSearch, faTimes, faShareAlt, faM
   padding: 7rem 2rem;
 }
 
-.admin-card>div {
+.admin-card > div {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.admin-card>div>h3 {
+.admin-card > div > h3 {
   font-size: 1.5rem;
   font-weight: 800;
   line-height: 2.25rem;
 }
 
-.admin-card>div>p {
+.admin-card > div > p {
   color: #fafbfe;
   font-size: 1rem;
   line-height: 1.5rem;
