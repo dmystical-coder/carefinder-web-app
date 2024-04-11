@@ -41,7 +41,7 @@ library.add(
       <span class="hidden">
         <FontAwesomeIcon :icon="faTimes" />
       </span>
-      <ul class="hidden">
+      <ul class="">
         <li><a href="#">About</a></li>
         <li><a href="#">Blog</a></li>
         <li><a href="#">Contact</a></li>

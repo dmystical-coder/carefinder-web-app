@@ -1,4 +1,5 @@
 <script>
+import axios from 'axios'
 import { db } from '@/firebase/firebase'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -38,18 +39,21 @@ export default {
   name: 'HospitalSearch',
   components: { FontAwesomeIcon },
   data: () => ({
+    lat: '',
+    lon: '',
     locationQuery: '',
     allHospitals: [],
     searchedHospitals: []
   }),
-  created() {
-    this.fetchData(), this.getLocationCoordinates()
-  },
+  created() {},
   computed: {
     validLocationQuery() {
       return this.locationQuery.replace(/\w\S*/g, function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
       })
+    },
+    coordinates() {
+      return `${this.lat}, ${this.lon}`
     }
   },
   methods: {
@@ -68,23 +72,44 @@ export default {
         console.error('Error searching hospitals:', error)
       }
     },
-    async fetchData() {
+    // async fetchData() {
+    //   try {
+    //     const querySnapshot = await getDocs(hospitalsRef)
+    //     querySnapshot.forEach((doc) => {
+    //       this.allHospitals.push({ ...doc.data(), id: doc.id })
+    //       console.log(this.allHospitals)
+    //     })
+    //   } catch (error) {
+    //     console.error('Error searching hospitals:', error)
+    //   }
+    // },
+    async getLocationCoordinates() {
       try {
-        const querySnapshot = await getDocs(hospitalsRef)
-        querySnapshot.forEach((doc) => {
-          this.allHospitals.push({ ...doc.data(), id: doc.id })
-          console.log(this.allHospitals)
-        })
+        const response =
+          await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${this.locationQuery}&key=AIzaSyDvtWNeV6bFqQ51ZRl8WDbRi_73OhHs1VU
+`)
+        if (!response.ok) {
+          throw new Error('Could not fetch resource')
+        }
+
+        const data = await response.json()
+        const location = data.results[0].geometry.location
+        console.log(location)
+        this.lat = location.lat
+        this.lon = location.lng
+        const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.coordinates}&radius=1500&type=hospital&key=AIzaSyDvtWNeV6bFqQ51ZRl8WDbRi_73OhHs1VU`
+        axios
+          .get(URL)
+          .then((response) => {
+            this.searchedHospitals = response.data.results
+            console.log(this.searchedHospitals)
+          })
+          .catch((error) => {
+            console.log(error.message)
+          })
       } catch (error) {
-        console.error('Error searching hospitals:', error)
+        console.error(error)
       }
-    },
-    getLocationCoordinates() {
-      fetch('http://localhost:3000/api')
-        .then((res) => res.text())
-        .then((data) => {
-          console.log(data)
-        })
     }
   }
 }
@@ -99,13 +124,13 @@ export default {
 
           <input
             type="text"
-            placeholder="Enter your Location..."
+            placeholder="Enter your Location, e.g. city name..."
             v-model.lazy.trim="locationQuery"
             @keyup.enter="handleSearch"
           />
         </div>
 
-        <button class="search-btn" @click="handleSearch">
+        <button class="search-btn" @click="getLocationCoordinates">
           <span>Search</span>
           <img src="@/assets/search-icon.svg" alt="" />
         </button>
@@ -210,27 +235,28 @@ export default {
           <img :src="hospital.img_url" alt="" />
           <div class="content">
             <div class="name">
-              <FontAwesomeIcon :icon="faMapLocationDot" />
+              <font-awesome-icon icon="fa-solid fa-hospital" />
               &nbsp;
               <h3>{{ hospital.name }}</h3>
             </div>
             <div class="type">
               <img src="@/assets/hospital.svg" alt="" />
               &nbsp;
-              <span>Hospital</span>
+              <span>{{ hospital.types[0] }}</span>
             </div>
             <div class="address">
-              <FontAwesomeIcon :icon="faMapLocationDot" /> &nbsp;
-              <span>{{ hospital.address }}</span>
+              <font-awesome-icon icon="fa-solid fa-map-location-dot" /> &nbsp;
+              <span>{{ hospital.formatted_address }}</span>
             </div>
             <div class="phone">
-              <FontAwesomeIcon :icon="faMapLocationDot" />
+              <font-awesome-icon icon="fa-solid fa-phone" />
               &nbsp;
-              <span>{{ hospital.phone_number }}</span>
+              <span>{{ hospital.formatted_phone_number || 'N/A' }}</span>
             </div>
             <div class="email">
-              <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;
-              <span>{{ hospital.email }}</span>
+              <font-awesome-icon icon="fa-solid fa-envelope" />
+              &nbsp;
+              <span>{{ hospital.email || 'N/A' }}</span>
             </div>
           </div>
         </div>
