@@ -246,7 +246,7 @@ export default {
             </div>
             <div class="address">
               <font-awesome-icon icon="fa-solid fa-map-location-dot" /> &nbsp;
-              <span>{{ hospital.formatted_address }}</span>
+              <span>{{ hospital.vicinity }}</span>
             </div>
             <div class="phone">
               <font-awesome-icon icon="fa-solid fa-phone" />
