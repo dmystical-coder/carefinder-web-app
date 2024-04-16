@@ -1,15 +1,12 @@
 <script setup>
+import TheNavBar from '@/components/TheNavBar.vue'
 import HospitalSearch from '@/components/HospitalSearch.vue'
-
+import TheFooter from '@/components/TheFooter.vue'
 </script>
 <template>
-  <header>
+  <TheNavBar />
 
-  </header>
-  <main>
-    <HospitalSearch />
-  </main>
-  <footer>
-    
-  </footer>
+  <HospitalSearch />
+
+  <TheFooter />
 </template>

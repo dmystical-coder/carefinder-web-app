@@ -1,4 +1,5 @@
 <script>
+
 import axios from 'axios'
 import { db } from '@/firebase/firebase'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -45,7 +46,7 @@ export default {
     allHospitals: [],
     searchedHospitals: []
   }),
-  created() {},
+  created() { },
   computed: {
     validLocationQuery() {
       return this.locationQuery.replace(/\w\S*/g, function (txt) {
@@ -122,12 +123,8 @@ export default {
         <div class="search-input">
           <font-awesome-icon icon="fa-solid fa-search" />
 
-          <input
-            type="text"
-            placeholder="Enter your Location, e.g. city name..."
-            v-model.lazy.trim="locationQuery"
-            @keyup.enter="handleSearch"
-          />
+          <input type="text" placeholder="Enter your Location, e.g. city name..." v-model.lazy.trim="locationQuery"
+            @keyup.enter="handleSearch" />
         </div>
 
         <button class="search-btn" @click="getLocationCoordinates">
@@ -182,14 +179,10 @@ export default {
       </form>
     </header>
     <main>
-      <div
-        v-if="allHospitals.length || searchedHospitals.length"
-        class="search-box search-result-text-box"
-      >
+      <div v-if="allHospitals.length || searchedHospitals.length" class="search-box search-result-text-box">
         <span v-if="allHospitals.length">Showing {{ allHospitals.length }} results</span>
-        <span v-else-if="searchedHospitals.length"
-          >Showing {{ searchedHospitals.length }} results for {{ validLocationQuery }}</span
-        >
+        <span v-else-if="searchedHospitals.length">Showing {{ searchedHospitals.length }} results for {{
+            validLocationQuery }}</span>
 
         <div>
           <font-awesome-icon icon="fa-solid fa-file-export" size="2x" style="cursor: pointer" />
@@ -263,6 +256,7 @@ export default {
       </div>
       <p v-else>No hospitals found.</p>
     </main>
+
   </div>
 </template>
 
@@ -344,7 +338,7 @@ input::placeholder {
   line-height: normal;
 }
 
-.search-result-text-box > div {
+.search-result-text-box>div {
   display: flex;
   gap: 1rem;
 }

@@ -1,4 +1,6 @@
 <script setup>
+import TheNavBar from '@/components/TheNavBar.vue'
+import TheFooter from '@/components/TheFooter.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
@@ -33,22 +35,7 @@ library.add(
 </script>
 <template>
   <div class="container">
-    <nav>
-      <div class="logo">
-        <img src="@/assets/logo.svg" alt="" />
-      </div>
-      <FontAwesomeIcon :icon="faBars" size="2x" />
-      <span class="hidden">
-        <FontAwesomeIcon :icon="faTimes" />
-      </span>
-      <ul class="">
-        <li><a href="#">About</a></li>
-        <li><a href="#">Blog</a></li>
-        <li><a href="#">Contact</a></li>
-        <li><a href="#" class="btn">Login</a></li>
-        <li><a href="#" class="btn">Signup</a></li>
-      </ul>
-    </nav>
+    <TheNavBar />
     <header>
       <div class="hero">
         <div class="hero-content">
@@ -128,10 +115,8 @@ library.add(
                 alt=""
               />
             </div> -->
-          <img
-            src="https://lh5.googleusercontent.com/p/AF1QipOWSZ0l_Xety_7BDoj0BiYjh8dQ771UeVr2FxXy=w408-h306-k-no"
-            alt=""
-          />
+          <img src="https://lh5.googleusercontent.com/p/AF1QipOWSZ0l_Xety_7BDoj0BiYjh8dQ771UeVr2FxXy=w408-h306-k-no"
+            alt="" />
           <div class="content">
             <div class="name">
               <FontAwesomeIcon :icon="faHospital" />&nbsp;
@@ -158,10 +143,8 @@ library.add(
           </div>
         </div>
         <div class="detail-card">
-          <img
-            src="https://lh5.googleusercontent.com/p/AF1QipMfy1m5p2XEkjHpfwy24ytmgNWJvo-c5TzxkzQL=w426-h240-k-no"
-            alt=""
-          />
+          <img src="https://lh5.googleusercontent.com/p/AF1QipMfy1m5p2XEkjHpfwy24ytmgNWJvo-c5TzxkzQL=w426-h240-k-no"
+            alt="" />
           <div class="content">
             <div class="name">
               <FontAwesomeIcon :icon="faHospital" />&nbsp;
@@ -187,10 +170,8 @@ library.add(
           </div>
         </div>
         <div class="detail-card">
-          <img
-            src="https://lh5.googleusercontent.com/p/AF1QipMui4lkCP9J2wHxPdwIN9dTOf_LCrlG7Zg52Wnb=w408-h544-k-no"
-            alt=""
-          />
+          <img src="https://lh5.googleusercontent.com/p/AF1QipMui4lkCP9J2wHxPdwIN9dTOf_LCrlG7Zg52Wnb=w408-h544-k-no"
+            alt="" />
           <div class="content">
             <div class="name">
               <FontAwesomeIcon :icon="faHospital" />&nbsp;
@@ -231,49 +212,7 @@ library.add(
         <a href="#" class="admin-cta-btn">Join Today</a>
       </div>
     </main>
-    <footer>
-      <div class="footer-logo">
-        <img src="@/assets/logo.svg" alt="" />
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias minus ab, suscipit
-          praesentium quibusdam inventore at reprehenderit quas officia pariatur!
-        </p>
-      </div>
-      <div class="socials">
-        <a href=""><img src="@/assets/facebook-icon.svg" alt="" /></a>
-        <a
-          href="
-          #"
-          ><img src="@/assets/x-icon.svg" alt=""
-        /></a>
-      </div>
-
-      <div class="useful-links">
-        <div class="nav">
-          <h4>Navigation</h4>
-          <ul>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Contact</a></li>
-          </ul>
-        </div>
-        <div class="contribute">
-          <h4>Community</h4>
-          <ul>
-            <li><a href="#" class="btn">Login</a></li>
-            <li><a href="#" class="btn">Signup</a></li>
-            <li><a href="#">Contributors</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="copy">
-        <FontAwesomeIcon :icon="faCopyright" size="lg" /> &nbsp;
-        <span>2024</span>
-        &nbsp;
-        <a href="https://github.com/dmystical-coder">dmystical-coder</a>
-      </div>
-    </footer>
+    <TheFooter />
   </div>
 </template>
 
@@ -303,19 +242,19 @@ library.add(
   padding: 7rem 2rem;
 }
 
-.admin-card > div {
+.admin-card>div {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.admin-card > div > h3 {
+.admin-card>div>h3 {
   font-size: 1.5rem;
   font-weight: 800;
   line-height: 2.25rem;
 }
 
-.admin-card > div > p {
+.admin-card>div>p {
   color: #fafbfe;
   font-size: 1rem;
   line-height: 1.5rem;
