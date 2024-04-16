@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import TheNavBar from '@/components/TheNavBar.vue'
+import TheFooter from '@/components/TheFooter.vue'
 import { auth } from '@/firebase/firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { ref } from 'vue'
@@ -27,27 +29,26 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="sign-up-form">
-    <!-- <img class="user" src="user-removebg-preview.png" /> -->
+  <TheNavBar />
+  <main>
+    <div class="sign-up-form">
+      <!-- <img class="user" src="user-removebg-preview.png" /> -->
 
-    <h1>Sign Up Now</h1>
-    <form @submit.prevent="submit">
-      <input type="email" class="input-box" placeholder="Enter your Email" v-model="data.email" />
-      <input
-        type="password"
-        class="input-box"
-        placeholder="Enter your Password"
-        v-model="data.password"
-      />
-      <button type="submit" class="signup-btn">Sign Up</button>
+      <h1>Sign Up</h1>
+      <form @submit.prevent="submit">
+        <input type="email" class="input-box" placeholder="Enter your Email" v-model="data.email" />
+        <input type="password" class="input-box" placeholder="Enter your Password" v-model="data.password" />
+        <button type="submit" class="signup-btn">Sign Up</button>
 
-      <!-- <p class="or">OR</p>
+        <!-- <p class="or">OR</p>
       <a href="https://www.twitter.com"
         ><button type="button" class="twitter-btn">Login with Twitter</button></a
       > -->
-      <p>Do you have an account? <router-link to="/signin">Sign In</router-link></p>
-    </form>
-  </div>
+        <p>Have an account? <router-link to="/signin">Sign In</router-link></p>
+      </form>
+    </div>
+  </main>
+  <TheFooter />
 </template>
 
 
@@ -129,10 +130,6 @@ hr {
 
   header {
     background-color: white;
-  }
-
-  nav {
-    display: none;
   }
 
   .logo {

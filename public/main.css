@@ -25,7 +25,7 @@ footer {
 }
 header {
   background: #2aa6ff;
-  padding-block: 3rem;
+  padding-top: 3rem;
   text-align: center;
 }
 
@@ -37,30 +37,18 @@ header {
   flex-direction: column;
   gap: 2rem;
 }
-.hero-content {
+/* .hero-content {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-}
+} */
 .hero-content h1 {
   font-family: 'Poppins', sans-serif, sans-serif;
   font-size: 2rem;
   font-weight: 900;
   color: #ffffff;
 }
-.hero-content p {
-  color: #5c6169;
-}
-.hero a {
-  align-self: center;
-  color: #ffffff;
-  border: 1px solid #ffffff;
-  padding: 1rem 3rem;
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.5rem;
-  border-radius: 5.625rem;
-}
+
 
 main {
   background-color: #ffffff;

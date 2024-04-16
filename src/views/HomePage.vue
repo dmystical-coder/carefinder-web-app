@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import TheNavBar from '@/components/TheNavBar.vue'
 import DetailCard from '@/components/DetailCard.vue'
+import HospitalSearch from '@/components/HospitalSearch.vue'
 import TheFooter from '@/components/TheFooter.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -101,10 +102,9 @@ const data = {
         <div class="hero-content">
           <h1>Find, Export, and Share Hospitals within your Region.</h1>
         </div>
-
-        <router-link to="/dashboard">Find Hospitals</router-link>
       </div>
     </header>
+    <HospitalSearch />
     <main>
       <h2>Features</h2>
       <div class="grid-container">

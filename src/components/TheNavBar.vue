@@ -41,6 +41,7 @@ const toggleMobileNav = () => {
 
 <style scoped>
 nav {
+    box-shadow: 6px 6px 35px 0px rgba(16, 40, 81, 0.11);
     position: relative;
     font-family: 'Raleway', sans-serif;
     padding: 2rem;
@@ -60,8 +61,8 @@ nav ul li a:hover {
 
 @media screen and (min-width: 280px) and (max-width:779px) {
     .nav-links {
-        border-top: 1px solid #2aa6ff;
-        border-bottom: 1px solid #2aa6ff;
+        /* border-top: 1px solid #2aa6ff;
+        border-bottom: 1px solid #2aa6ff; */
        padding-bottom: 2rem;
         width: 100%;
         background-color: #ffffff;

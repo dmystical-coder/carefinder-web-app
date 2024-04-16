@@ -1,5 +1,5 @@
 <script>
-
+import DetailCard from '@/components/DetailCard.vue'
 import axios from 'axios'
 import { db } from '@/firebase/firebase'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -39,7 +39,7 @@ library.add(
 )
 export default {
   name: 'HospitalSearch',
-  components: { FontAwesomeIcon },
+  components: { FontAwesomeIcon, DetailCard },
   data: () => ({
     lat: '',
     lon: '',
@@ -74,17 +74,6 @@ export default {
         console.error('Error searching hospitals:', error)
       }
     },
-    // async fetchData() {
-    //   try {
-    //     const querySnapshot = await getDocs(hospitalsRef)
-    //     querySnapshot.forEach((doc) => {
-    //       this.allHospitals.push({ ...doc.data(), id: doc.id })
-    //       console.log(this.allHospitals)
-    //     })
-    //   } catch (error) {
-    //     console.error('Error searching hospitals:', error)
-    //   }
-    // },
     async getLocationCoordinates() {
       try {
         const response =
@@ -118,147 +107,49 @@ export default {
 </script>
 
 <template>
-  <div class="container">
-    <header>
-      <form @submit.prevent class="search-box">
-        <div class="search-input">
-          <font-awesome-icon icon="fa-solid fa-search" />
 
-          <input type="text" placeholder="Enter your Location, e.g. city name..." v-model.lazy.trim="locationQuery"
-            @keyup.enter="handleSearch" />
-        </div>
+  <header>
+    <form @submit.prevent class="search-box">
+      <div class="search-input">
+        <font-awesome-icon icon="fa-solid fa-search" />
 
-        <button class="search-btn" @click="getLocationCoordinates">
-          <span>Search</span>
-          <img src="@/assets/search-icon.svg" alt="" />
-        </button>
-
-        <!-- <div class="filters">
-            <div>
-              <span>Filter by Cities:</span>
-              <label class="checkbox-label">
-                <input type="checkbox" value="user" />
-                Lagos
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="repository" />
-                Ogun
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="repository" />
-                Oyo
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="repository" />
-                Niger
-              </label>
-            </div>
-            <div>
-              <span>Filter by Providers:</span>
-              <label class="checkbox-label">
-                <input type="checkbox" value="user" />
-                Clinic
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="repository" />
-                Hospital
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="repository" />
-                Gym
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="repository" />
-                Spa
-              </label>
-            </div>
-            
-            <button>
-              <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;Apply Filters
-            </button>
-          </div> -->
-      </form>
-    </header>
-    <main>
-      <div v-if="allHospitals.length || searchedHospitals.length" class="search-box search-result-text-box">
-        <span v-if="allHospitals.length">Showing {{ allHospitals.length }} results</span>
-        <span v-else-if="searchedHospitals.length">Showing {{ searchedHospitals.length }} results for {{
-            validLocationQuery }}</span>
-
-        <div>
-          <font-awesome-icon icon="fa-solid fa-file-export" size="2x" style="cursor: pointer" />
-
-          <font-awesome-icon icon="fa-solid fa-share-alt" size="2x" style="cursor: pointer" />
-        </div>
+        <input type="text" placeholder="Enter your Location, e.g. city name..." v-model.lazy.trim="locationQuery"
+          @keyup.enter="handleSearch" />
       </div>
 
-      <div class="grid-container" v-if="allHospitals.length">
-        <div class="detail-card" v-for="hospital in allHospitals" :key="hospital.id">
-          <img :src="hospital.img_url" alt="" />
-          <div class="content">
-            <div class="name">
-              <font-awesome-icon icon="fa-solid fa-hospital" />
-              &nbsp;
-              <h3>{{ hospital.name }}</h3>
-            </div>
-            <div class="type">
-              <img src="@/assets/hospital.svg" alt="" />
-              &nbsp;
-              <span>Hospital</span>
-            </div>
-            <div class="address">
-              <font-awesome-icon icon="fa-solid fa-map-location-dot" />
-              &nbsp;
-              <span>{{ hospital.address }}</span>
-            </div>
-            <div class="phone">
-              <font-awesome-icon icon="fa-solid fa-phone" />
-              &nbsp;
-              <span>{{ hospital.phone_number }}</span>
-            </div>
-            <div class="email">
-              <font-awesome-icon icon="fa-solid fa-envelope" />
-              &nbsp;
-              <span>{{ hospital.email }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="grid-container" v-else-if="searchedHospitals.length">
-        <div class="detail-card" v-for="hospital in searchedHospitals" :key="hospital.id">
-          <img :src="hospital.img_url" alt="" />
-          <div class="content">
-            <div class="name">
-              <font-awesome-icon icon="fa-solid fa-hospital" />
-              &nbsp;
-              <h3>{{ hospital.name }}</h3>
-            </div>
-            <div class="type">
-              <img src="@/assets/hospital.svg" alt="" />
-              &nbsp;
-              <span>{{ hospital.types[0] }}</span>
-            </div>
-            <div class="address">
-              <font-awesome-icon icon="fa-solid fa-map-location-dot" /> &nbsp;
-              <span>{{ hospital.vicinity }}</span>
-            </div>
-            <div class="phone">
-              <font-awesome-icon icon="fa-solid fa-phone" />
-              &nbsp;
-              <span>{{ hospital.formatted_phone_number || 'N/A' }}</span>
-            </div>
-            <div class="email">
-              <font-awesome-icon icon="fa-solid fa-envelope" />
-              &nbsp;
-              <span>{{ hospital.email || 'N/A' }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <p v-else>No hospitals found.</p>
-    </main>
+      <button class="search-btn" @click="getLocationCoordinates">
+        <span>Search</span>
+        <img src="@/assets/search-icon.svg" alt="" />
+      </button>
+    </form>
+  </header>
+  <main>
+    <div v-if="allHospitals.length || searchedHospitals.length" class="search-box search-result-text-box">
+      <span v-if="allHospitals.length">Showing {{ allHospitals.length }} results</span>
+      <span v-else-if="searchedHospitals.length">Showing {{ searchedHospitals.length }} results for {{
+        validLocationQuery }}</span>
 
-  </div>
+      <div>
+        <font-awesome-icon icon="fa-solid fa-file-export" size="2x" style="cursor: pointer" />
+
+        <font-awesome-icon icon="fa-solid fa-share-alt" size="2x" style="cursor: pointer" />
+      </div>
+    </div>
+
+    <div class="grid-container" v-if="allHospitals.length">
+      <DetailCard v-for="hospital in allHospitals" :key="hospital.id" :type="hospital.types[0]" :name="hospital.name"
+        :address="hospital.vicinity" :image="hospital.img_url" :phone="hospital.formatted_phone_number"
+        :email="hospital.email" />
+    </div>
+    <div class="grid-container" v-else-if="searchedHospitals.length">
+      <DetailCard v-for="hospital in searchedHospitals" :key="hospital.id" :type="hospital.types[0]" :name="hospital.name"
+        :address="hospital.vicinity" :image="hospital.img_url" :phone="hospital.formatted_phone_number"
+        :email="hospital.email" />
+    </div>
+    <p v-else>No hospitals found.</p>
+  </main>
+
+
 </template>
 
 <style scoped>
