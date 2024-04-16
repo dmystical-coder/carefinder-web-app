@@ -1,3 +1,32 @@
+<script setup lang="ts">
+import { auth } from '@/firebase/firebase'
+import router from '@/router'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { ref } from 'vue'
+
+const data = ref({
+  email: '',
+  password: ''
+})
+
+const signin = async (email: string, password: string) => {
+  await signInWithEmailAndPassword(auth, email, password)
+    .then(() => { })
+    .catch((err) => {
+      console.log(err)
+    })
+
+  console.log('User Signed in.')
+}
+
+const submit = () => {
+  let email = data.value.email
+  let password = data.value.password
+
+  signin(email, password)
+  router.push('/dashboard')
+}
+</script>
 <template>
   <div class="sign-up-form">
     <!-- <img class="user" src="user-removebg-preview.png" /> -->
@@ -23,35 +52,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { auth } from '@/firebase/firebase'
-import router from '@/router'
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { ref } from 'vue'
-
-const data = ref({
-  email: '',
-  password: ''
-})
-
-const signin = async (email: string, password: string) => {
-  await signInWithEmailAndPassword(auth, email, password)
-    .then(() => {})
-    .catch((err) => {
-      console.log(err)
-    })
-
-  console.log('User Signed in.')
-}
-
-const submit = () => {
-  let email = data.value.email
-  let password = data.value.password
-
-  signin(email, password)
-  router.push('/dashboard')
-}
-</script>
 
 <style scoped>
 .sign-up-form {

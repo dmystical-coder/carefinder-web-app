@@ -1,3 +1,31 @@
+<script setup lang="ts">
+import { auth } from '@/firebase/firebase'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { ref } from 'vue'
+
+const data = ref({
+  email: '',
+  password: ''
+})
+
+const signup = async (email: string, password: string) => {
+  await createUserWithEmailAndPassword(auth, email, password)
+    .then(() => { })
+    .catch((err) => {
+      console.log(err)
+    })
+
+  console.log('User created.')
+}
+
+const submit = () => {
+  let email = data.value.email
+  let password = data.value.password
+
+  signup(email, password)
+}
+</script>
+
 <template>
   <div class="sign-up-form">
     <!-- <img class="user" src="user-removebg-preview.png" /> -->
@@ -22,33 +50,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { auth } from '@/firebase/firebase'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { ref } from 'vue'
 
-const data = ref({
-  email: '',
-  password: ''
-})
-
-const signup = async (email: string, password: string) => {
-  await createUserWithEmailAndPassword(auth, email, password)
-    .then(() => {})
-    .catch((err) => {
-      console.log(err)
-    })
-
-  console.log('User created.')
-}
-
-const submit = () => {
-  let email = data.value.email
-  let password = data.value.password
-
-  signup(email, password)
-}
-</script>
 
 <style scoped>
 .sign-up-form {

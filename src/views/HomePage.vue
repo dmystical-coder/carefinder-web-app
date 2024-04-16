@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import TheNavBar from '@/components/TheNavBar.vue'
 import TheFooter from '@/components/TheFooter.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
