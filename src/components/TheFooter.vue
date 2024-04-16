@@ -10,7 +10,9 @@ library.add(
     <footer>
         <div class="footer-brand">
             <div class="footer-logo">
-                <img src="@/assets/logo.svg" alt="" />
+                <router-link to="/">
+                    <img src="@/assets/logo.svg" alt="" />
+                </router-link>
             </div>
             <div class="socials">
                 <a href=""><img src="@/assets/facebook-icon.svg" alt="" /></a>

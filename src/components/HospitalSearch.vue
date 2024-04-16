@@ -16,7 +16,7 @@ import {
   faHospital,
   faFilter,
   faFileExport,
-  faMapLocationDot
+  faMapLocationDot,
 } from '@fortawesome/free-solid-svg-icons'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 
@@ -34,7 +34,8 @@ library.add(
   faHospital,
   faFilter,
   faFileExport,
-  faMapLocationDot
+  faMapLocationDot,
+  
 )
 export default {
   name: 'HospitalSearch',
