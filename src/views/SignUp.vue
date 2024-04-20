@@ -36,14 +36,9 @@ const submit = () => {
 
       <h1>Sign Up</h1>
       <form @submit.prevent="submit">
-        <input type="email" class="input-box" placeholder="Enter your Email" v-model="data.email" />
-        <input type="password" class="input-box" placeholder="Enter your Password" v-model="data.password" />
+        <input type="email" class="input-box" placeholder="Enter your Email" v-model="data.email" required />
+        <input type="password" class="input-box" placeholder="Enter your Password" v-model="data.password" required />
         <button type="submit" class="signup-btn">Sign Up</button>
-
-        <!-- <p class="or">OR</p>
-      <a href="https://www.twitter.com"
-        ><button type="button" class="twitter-btn">Login with Twitter</button></a
-      > -->
         <p>Have an account? <router-link to="/signin">Sign In</router-link></p>
       </form>
     </div>

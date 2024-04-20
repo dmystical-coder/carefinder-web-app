@@ -5,6 +5,7 @@ import { db } from '@/firebase/firebase'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
+faSync,
   faPhone,
   faEnvelope,
   faCopyright,
@@ -23,6 +24,7 @@ import { collection, getDocs, query, where } from 'firebase/firestore'
 // create a reference to the hospitals collection
 const hospitalsRef = collection(db, 'hospitals')
 library.add(
+  faSync,
   faPhone,
   faEnvelope,
   faCopyright,
@@ -35,15 +37,18 @@ library.add(
   faFilter,
   faFileExport,
   faMapLocationDot,
-  
+
 )
 export default {
   name: 'HospitalSearch',
   components: { FontAwesomeIcon, DetailCard },
   data: () => ({
+    isLoading: false,
+    foundHospitals: false,
     lat: '',
     lon: '',
     locationQuery: '',
+    photoUrl: '',
     allHospitals: [],
     searchedHospitals: []
   }),
@@ -75,6 +80,8 @@ export default {
       }
     },
     async getLocationCoordinates() {
+      this.foundHospitals=false
+      this.isLoading=true
       try {
         const response =
           await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${this.locationQuery}&key=AIzaSyDvtWNeV6bFqQ51ZRl8WDbRi_73OhHs1VU
@@ -89,19 +96,54 @@ export default {
         this.lat = location.lat
         this.lon = location.lng
         const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.coordinates}&radius=1500&type=hospital&key=AIzaSyDvtWNeV6bFqQ51ZRl8WDbRi_73OhHs1VU`
-        axios
-          .get(URL)
+        await axios
+          .get('https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/textsearch/json', {
+            params: {
+              query: `hospitals in ${this.locationQuery}`,
+              key: 'AIzaSyDvtWNeV6bFqQ51ZRl8WDbRi_73OhHs1VU'
+            }
+          })
           .then((response) => {
             this.searchedHospitals = response.data.results
+            this.isLoading = false
             console.log(this.searchedHospitals)
+
+            
+
+            if (this.searchedHospitals.photos && this.searchedHospitals.photos.length > 0) {
+              this.fetchPhotoUrl(this.searchedHospitals.photos[0].photo_reference);
+            }
+            console.log(this.photoUrl)
           })
           .catch((error) => {
+            
             console.log(error.message)
           })
       } catch (error) {
+        this.isLoading = false
+        this.foundHospitals = true
         console.error(error)
       }
-    }
+      this.locationQuery=''
+    },
+    async fetchPhotoUrl(photoReference) {
+      try {
+        const response = await axios.get('https://maps.googleapis.com/maps/api/place/photo', {
+          params: {
+            maxwidth: 400, // Adjust image size as needed
+            photoreference: photoReference,
+            key: 'AIzaSyDvtWNeV6bFqQ51ZRl8WDbRi_73OhHs1VU'
+          },
+          responseType: 'blob'
+        });
+
+        const imageUrl = URL.createObjectURL(response.data);
+        this.photoUrl = imageUrl;
+        console.log(imageUrl)
+      } catch (error) {
+        console.error('Error fetching photo URL:', error);
+      }
+    },
   }
 }
 </script>
@@ -113,11 +155,11 @@ export default {
       <div class="search-input">
         <font-awesome-icon icon="fa-solid fa-search" />
 
-        <input type="text" placeholder="Enter your Location, e.g. city name..." v-model.lazy.trim="locationQuery"
-          @keyup.enter="handleSearch" />
+        <input type="text" placeholder="Enter your Location, e.g. city name..." v-model.trim="locationQuery"
+          @keyup.enter="locationQuery.length > 0 ? handleSearch : console.log('error')" />
       </div>
 
-      <button class="search-btn" @click="getLocationCoordinates">
+      <button class="search-btn" @click="getLocationCoordinates" :disabled="locationQuery.length === 0"> 
         <span>Search</span>
         <img src="@/assets/search-icon.svg" alt="" />
       </button>
@@ -142,11 +184,14 @@ export default {
         :email="hospital.email" />
     </div>
     <div class="grid-container" v-else-if="searchedHospitals.length">
-      <DetailCard v-for="hospital in searchedHospitals" :key="hospital.id" :type="hospital.types[0]" :name="hospital.name"
-        :address="hospital.vicinity" :image="hospital.img_url" :phone="hospital.formatted_phone_number"
-        :email="hospital.email" />
+      <DetailCard v-for="hospital in searchedHospitals" :key="hospital.id" :type="hospital.types[0]"
+        :name="hospital.name" :address="hospital.formatted_address" :image="photoUrl"
+        :phone="hospital.formatted_phone_number" :email="hospital.email" />
     </div>
-    <p v-else>No hospitals found.</p>
+    <div v-else style="text-align: center;">
+      <p v-show="isLoading">Loading <font-awesome-icon icon="fa-solid fa-sync" spin size="lg" /></p>
+      <p v-show="foundHospitals">No hospitals found.</p>
+    </div>
   </main>
 
 
@@ -154,7 +199,10 @@ export default {
 
 <style scoped>
 /* Include Font Awesome CSS */
-
+button:disabled{
+  cursor: not-allowed;
+  opacity: 50%;
+}
 /* Add your styles here */
 .search-box {
   display: flex;
@@ -195,6 +243,7 @@ input::placeholder {
 }
 
 .search-btn {
+  cursor: pointer;
   color: #fff;
   font-size: 1rem;
   font-style: normal;
