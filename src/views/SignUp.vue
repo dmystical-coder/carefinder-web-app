@@ -1,28 +1,6 @@
-<template>
-  <div class="sign-up-form">
-    <!-- <img class="user" src="user-removebg-preview.png" /> -->
-
-    <h1>Sign Up Now</h1>
-    <form @submit.prevent="submit">
-      <input type="email" class="input-box" placeholder="Enter your Email" v-model="data.email" />
-      <input
-        type="password"
-        class="input-box"
-        placeholder="Enter your Password"
-        v-model="data.password"
-      />
-      <button type="submit" class="signup-btn">Sign Up</button>
-
-      <!-- <p class="or">OR</p>
-      <a href="https://www.twitter.com"
-        ><button type="button" class="twitter-btn">Login with Twitter</button></a
-      > -->
-      <p>Do you have an account? <router-link to="/signin">Sign In</router-link></p>
-    </form>
-  </div>
-</template>
-
 <script setup lang="ts">
+import TheNavBar from '@/components/TheNavBar.vue'
+import TheFooter from '@/components/TheFooter.vue'
 import { auth } from '@/firebase/firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { ref } from 'vue'
@@ -34,7 +12,7 @@ const data = ref({
 
 const signup = async (email: string, password: string) => {
   await createUserWithEmailAndPassword(auth, email, password)
-    .then(() => {})
+    .then(() => { })
     .catch((err) => {
       console.log(err)
     })
@@ -49,6 +27,26 @@ const submit = () => {
   signup(email, password)
 }
 </script>
+
+<template>
+  <TheNavBar />
+  <main>
+    <div class="sign-up-form">
+      <!-- <img class="user" src="user-removebg-preview.png" /> -->
+
+      <h1>Sign Up</h1>
+      <form @submit.prevent="submit">
+        <input type="email" class="input-box" placeholder="Enter your Email" v-model="data.email" required />
+        <input type="password" class="input-box" placeholder="Enter your Password" v-model="data.password" required />
+        <button type="submit" class="signup-btn">Sign Up</button>
+        <p>Have an account? <router-link to="/signin">Sign In</router-link></p>
+      </form>
+    </div>
+  </main>
+  <TheFooter />
+</template>
+
+
 
 <style scoped>
 .sign-up-form {
@@ -127,10 +125,6 @@ hr {
 
   header {
     background-color: white;
-  }
-
-  nav {
-    display: none;
   }
 
   .logo {

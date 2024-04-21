@@ -1,9 +1,11 @@
 <script>
+import DetailCard from '@/components/DetailCard.vue'
 import axios from 'axios'
 import { db } from '@/firebase/firebase'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
+faSync,
   faPhone,
   faEnvelope,
   faCopyright,
@@ -15,13 +17,14 @@ import {
   faHospital,
   faFilter,
   faFileExport,
-  faMapLocationDot
+  faMapLocationDot,
 } from '@fortawesome/free-solid-svg-icons'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 
 // create a reference to the hospitals collection
 const hospitalsRef = collection(db, 'hospitals')
 library.add(
+  faSync,
   faPhone,
   faEnvelope,
   faCopyright,
@@ -33,19 +36,23 @@ library.add(
   faHospital,
   faFilter,
   faFileExport,
-  faMapLocationDot
+  faMapLocationDot,
+
 )
 export default {
   name: 'HospitalSearch',
-  components: { FontAwesomeIcon },
+  components: { FontAwesomeIcon, DetailCard },
   data: () => ({
+    isLoading: false,
+    foundHospitals: false,
     lat: '',
     lon: '',
     locationQuery: '',
+    photoUrl: '',
     allHospitals: [],
     searchedHospitals: []
   }),
-  created() {},
+  created() { },
   computed: {
     validLocationQuery() {
       return this.locationQuery.replace(/\w\S*/g, function (txt) {
@@ -72,18 +79,9 @@ export default {
         console.error('Error searching hospitals:', error)
       }
     },
-    // async fetchData() {
-    //   try {
-    //     const querySnapshot = await getDocs(hospitalsRef)
-    //     querySnapshot.forEach((doc) => {
-    //       this.allHospitals.push({ ...doc.data(), id: doc.id })
-    //       console.log(this.allHospitals)
-    //     })
-    //   } catch (error) {
-    //     console.error('Error searching hospitals:', error)
-    //   }
-    // },
     async getLocationCoordinates() {
+      this.foundHospitals=false
+      this.isLoading=true
       try {
         const response =
           await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${this.locationQuery}&key=AIzaSyDvtWNeV6bFqQ51ZRl8WDbRi_73OhHs1VU
@@ -98,177 +96,113 @@ export default {
         this.lat = location.lat
         this.lon = location.lng
         const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.coordinates}&radius=1500&type=hospital&key=AIzaSyDvtWNeV6bFqQ51ZRl8WDbRi_73OhHs1VU`
-        axios
-          .get(URL)
+        await axios
+          .get('https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/textsearch/json', {
+            params: {
+              query: `hospitals in ${this.locationQuery}`,
+              key: 'AIzaSyDvtWNeV6bFqQ51ZRl8WDbRi_73OhHs1VU'
+            }
+          })
           .then((response) => {
             this.searchedHospitals = response.data.results
+            this.isLoading = false
             console.log(this.searchedHospitals)
+
+            
+
+            if (this.searchedHospitals.photos && this.searchedHospitals.photos.length > 0) {
+              this.fetchPhotoUrl(this.searchedHospitals.photos[0].photo_reference);
+            }
+            console.log(this.photoUrl)
           })
           .catch((error) => {
+            
             console.log(error.message)
           })
       } catch (error) {
+        this.isLoading = false
+        this.foundHospitals = true
         console.error(error)
       }
-    }
+      this.locationQuery=''
+    },
+    async fetchPhotoUrl(photoReference) {
+      try {
+        const response = await axios.get('https://maps.googleapis.com/maps/api/place/photo', {
+          params: {
+            maxwidth: 400, // Adjust image size as needed
+            photoreference: photoReference,
+            key: 'AIzaSyDvtWNeV6bFqQ51ZRl8WDbRi_73OhHs1VU'
+          },
+          responseType: 'blob'
+        });
+
+        const imageUrl = URL.createObjectURL(response.data);
+        this.photoUrl = imageUrl;
+        console.log(imageUrl)
+      } catch (error) {
+        console.error('Error fetching photo URL:', error);
+      }
+    },
   }
 }
 </script>
 
 <template>
-  <div class="container">
-    <header>
-      <form @submit.prevent class="search-box">
-        <div class="search-input">
-          <font-awesome-icon icon="fa-solid fa-search" />
 
-          <input
-            type="text"
-            placeholder="Enter your Location, e.g. city name..."
-            v-model.lazy.trim="locationQuery"
-            @keyup.enter="handleSearch"
-          />
-        </div>
+  <header>
+    <form @submit.prevent class="search-box">
+      <div class="search-input">
+        <font-awesome-icon icon="fa-solid fa-search" />
 
-        <button class="search-btn" @click="getLocationCoordinates">
-          <span>Search</span>
-          <img src="@/assets/search-icon.svg" alt="" />
-        </button>
-
-        <!-- <div class="filters">
-            <div>
-              <span>Filter by Cities:</span>
-              <label class="checkbox-label">
-                <input type="checkbox" value="user" />
-                Lagos
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="repository" />
-                Ogun
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="repository" />
-                Oyo
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="repository" />
-                Niger
-              </label>
-            </div>
-            <div>
-              <span>Filter by Providers:</span>
-              <label class="checkbox-label">
-                <input type="checkbox" value="user" />
-                Clinic
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="repository" />
-                Hospital
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="repository" />
-                Gym
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="repository" />
-                Spa
-              </label>
-            </div>
-            
-            <button>
-              <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;Apply Filters
-            </button>
-          </div> -->
-      </form>
-    </header>
-    <main>
-      <div
-        v-if="allHospitals.length || searchedHospitals.length"
-        class="search-box search-result-text-box"
-      >
-        <span v-if="allHospitals.length">Showing {{ allHospitals.length }} results</span>
-        <span v-else-if="searchedHospitals.length"
-          >Showing {{ searchedHospitals.length }} results for {{ validLocationQuery }}</span
-        >
-
-        <div>
-          <font-awesome-icon icon="fa-solid fa-file-export" size="2x" style="cursor: pointer" />
-
-          <font-awesome-icon icon="fa-solid fa-share-alt" size="2x" style="cursor: pointer" />
-        </div>
+        <input type="text" placeholder="Enter your Location, e.g. city name..." v-model.trim="locationQuery"
+          @keyup.enter="locationQuery.length > 0 ? handleSearch : console.log('error')" />
       </div>
 
-      <div class="grid-container" v-if="allHospitals.length">
-        <div class="detail-card" v-for="hospital in allHospitals" :key="hospital.id">
-          <img :src="hospital.img_url" alt="" />
-          <div class="content">
-            <div class="name">
-              <font-awesome-icon icon="fa-solid fa-hospital" />
-              &nbsp;
-              <h3>{{ hospital.name }}</h3>
-            </div>
-            <div class="type">
-              <img src="@/assets/hospital.svg" alt="" />
-              &nbsp;
-              <span>Hospital</span>
-            </div>
-            <div class="address">
-              <font-awesome-icon icon="fa-solid fa-map-location-dot" />
-              &nbsp;
-              <span>{{ hospital.address }}</span>
-            </div>
-            <div class="phone">
-              <font-awesome-icon icon="fa-solid fa-phone" />
-              &nbsp;
-              <span>{{ hospital.phone_number }}</span>
-            </div>
-            <div class="email">
-              <font-awesome-icon icon="fa-solid fa-envelope" />
-              &nbsp;
-              <span>{{ hospital.email }}</span>
-            </div>
-          </div>
-        </div>
+      <button class="search-btn" @click="getLocationCoordinates" :disabled="locationQuery.length === 0"> 
+        <span>Search</span>
+        <img src="@/assets/search-icon.svg" alt="" />
+      </button>
+    </form>
+  </header>
+  <main>
+    <div v-if="allHospitals.length || searchedHospitals.length" class="search-box search-result-text-box">
+      <span v-if="allHospitals.length">Showing {{ allHospitals.length }} results</span>
+      <span v-else-if="searchedHospitals.length">Showing {{ searchedHospitals.length }} results for {{
+        validLocationQuery }}</span>
+
+      <div>
+        <font-awesome-icon icon="fa-solid fa-file-export" size="2x" style="cursor: pointer" />
+
+        <font-awesome-icon icon="fa-solid fa-share-alt" size="2x" style="cursor: pointer" />
       </div>
-      <div class="grid-container" v-else-if="searchedHospitals.length">
-        <div class="detail-card" v-for="hospital in searchedHospitals" :key="hospital.id">
-          <img :src="hospital.img_url" alt="" />
-          <div class="content">
-            <div class="name">
-              <font-awesome-icon icon="fa-solid fa-hospital" />
-              &nbsp;
-              <h3>{{ hospital.name }}</h3>
-            </div>
-            <div class="type">
-              <img src="@/assets/hospital.svg" alt="" />
-              &nbsp;
-              <span>{{ hospital.types[0] }}</span>
-            </div>
-            <div class="address">
-              <font-awesome-icon icon="fa-solid fa-map-location-dot" /> &nbsp;
-              <span>{{ hospital.formatted_address }}</span>
-            </div>
-            <div class="phone">
-              <font-awesome-icon icon="fa-solid fa-phone" />
-              &nbsp;
-              <span>{{ hospital.formatted_phone_number || 'N/A' }}</span>
-            </div>
-            <div class="email">
-              <font-awesome-icon icon="fa-solid fa-envelope" />
-              &nbsp;
-              <span>{{ hospital.email || 'N/A' }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <p v-else>No hospitals found.</p>
-    </main>
-  </div>
+    </div>
+
+    <div class="grid-container" v-if="allHospitals.length">
+      <DetailCard v-for="hospital in allHospitals" :key="hospital.id" :type="hospital.types[0]" :name="hospital.name"
+        :address="hospital.vicinity" :image="hospital.img_url" :phone="hospital.formatted_phone_number"
+        :email="hospital.email" />
+    </div>
+    <div class="grid-container" v-else-if="searchedHospitals.length">
+      <DetailCard v-for="hospital in searchedHospitals" :key="hospital.id" :type="hospital.types[0]"
+        :name="hospital.name" :address="hospital.formatted_address" :image="photoUrl"
+        :phone="hospital.formatted_phone_number" :email="hospital.email" />
+    </div>
+    <div v-else style="text-align: center;">
+      <p v-show="isLoading">Loading <font-awesome-icon icon="fa-solid fa-sync" spin size="lg" /></p>
+      <p v-show="foundHospitals">No hospitals found.</p>
+    </div>
+  </main>
+
+
 </template>
 
 <style scoped>
 /* Include Font Awesome CSS */
-
+button:disabled{
+  cursor: not-allowed;
+  opacity: 50%;
+}
 /* Add your styles here */
 .search-box {
   display: flex;
@@ -309,6 +243,7 @@ input::placeholder {
 }
 
 .search-btn {
+  cursor: pointer;
   color: #fff;
   font-size: 1rem;
   font-style: normal;
@@ -344,7 +279,7 @@ input::placeholder {
   line-height: normal;
 }
 
-.search-result-text-box > div {
+.search-result-text-box>div {
   display: flex;
   gap: 1rem;
 }
