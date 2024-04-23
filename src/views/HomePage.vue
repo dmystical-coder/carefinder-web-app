@@ -1,11 +1,8 @@
 <script setup lang="ts">
-<<<<<<< HEAD
-=======
 import TheNavBar from '@/components/TheNavBar.vue'
 import DetailCard from '@/components/DetailCard.vue'
 import HospitalSearch from '@/components/HospitalSearch.vue'
 import TheFooter from '@/components/TheFooter.vue'
->>>>>>> 89657ca5ba19098fc9280afed1ab2b8da8057657
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
