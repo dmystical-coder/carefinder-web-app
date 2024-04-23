@@ -5,7 +5,7 @@ import { db } from '@/firebase/firebase'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
-faSync,
+  faSync,
   faPhone,
   faEnvelope,
   faCopyright,
@@ -19,10 +19,8 @@ faSync,
   faFileExport,
   faMapLocationDot,
 } from '@fortawesome/free-solid-svg-icons'
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import { doc, setDoc } from 'firebase/firestore'
 
-// create a reference to the hospitals collection
-const hospitalsRef = collection(db, 'hospitals')
 library.add(
   faSync,
   faPhone,
@@ -45,57 +43,42 @@ export default {
   data: () => ({
     isLoading: false,
     foundHospitals: false,
-    lat: '',
-    lon: '',
     locationQuery: '',
+    locationDisplay: '',
+    photoReference: '',
     photoUrl: '',
     allHospitals: [],
     searchedHospitals: []
   }),
-  created() { },
   computed: {
     validLocationQuery() {
-      return this.locationQuery.replace(/\w\S*/g, function (txt) {
+      return this.locationDisplay.replace(/\w\S*/g, function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
       })
     },
-    coordinates() {
-      return `${this.lat}, ${this.lon}`
-    }
+
   },
   methods: {
-    async handleSearch() {
-      this.searchedHospitals = []
-      this.allHospitals = []
+    async writeHospitalsToFirestore() {
       try {
-        // Create a query against the collection.
-        const q = query(hospitalsRef, where('city', '==', this.validLocationQuery))
-        const querySnapshot = await getDocs(q)
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          this.searchedHospitals.push({ ...doc.data(), id: doc.id })
-        })
-      } catch (error) {
-        console.error('Error searching hospitals:', error)
-      }
-    },
-    async getLocationCoordinates() {
-      this.foundHospitals=false
-      this.isLoading=true
-      try {
-        const response =
-          await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${this.locationQuery}&key=AIzaSyDvtWNeV6bFqQ51ZRl8WDbRi_73OhHs1VU
-`)
-        if (!response.ok) {
-          throw new Error('Could not fetch resource')
+        for (let index = 0; index < this.searchedHospitals.length; index++) {
+          const hospital = this.searchedHospitals[index];
+          const customId = `${this.locationDisplay}-hospital_${index}`
+          // Construct a reference to a document with a custom ID
+          const docRef = doc(db, 'hospitals', customId);
+          // Set data for the document
+          await setDoc(docRef, hospital)
         }
+        console.log('Hospitals written to Firestore successfully');
+      } catch (error) {
+        console.error('Error writing hospitals to Firestore:', error);
+      }
 
-        const data = await response.json()
-        const location = data.results[0].geometry.location
-        console.log(location)
-        this.lat = location.lat
-        this.lon = location.lng
-        const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.coordinates}&radius=1500&type=hospital&key=AIzaSyDvtWNeV6bFqQ51ZRl8WDbRi_73OhHs1VU`
+    },
+    async handleSearch() {
+      this.foundHospitals = false
+      this.isLoading = true
+      try {
         await axios
           .get('https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/textsearch/json', {
             params: {
@@ -106,17 +89,11 @@ export default {
           .then((response) => {
             this.searchedHospitals = response.data.results
             this.isLoading = false
+            // this.photoReference = this.searchedHospitals.photos[0].photo_reference
             console.log(this.searchedHospitals)
-
-            
-
-            if (this.searchedHospitals.photos && this.searchedHospitals.photos.length > 0) {
-              this.fetchPhotoUrl(this.searchedHospitals.photos[0].photo_reference);
-            }
-            console.log(this.photoUrl)
           })
+
           .catch((error) => {
-            
             console.log(error.message)
           })
       } catch (error) {
@@ -124,25 +101,8 @@ export default {
         this.foundHospitals = true
         console.error(error)
       }
-      this.locationQuery=''
-    },
-    async fetchPhotoUrl(photoReference) {
-      try {
-        const response = await axios.get('https://maps.googleapis.com/maps/api/place/photo', {
-          params: {
-            maxwidth: 400, // Adjust image size as needed
-            photoreference: photoReference,
-            key: 'AIzaSyDvtWNeV6bFqQ51ZRl8WDbRi_73OhHs1VU'
-          },
-          responseType: 'blob'
-        });
-
-        const imageUrl = URL.createObjectURL(response.data);
-        this.photoUrl = imageUrl;
-        console.log(imageUrl)
-      } catch (error) {
-        console.error('Error fetching photo URL:', error);
-      }
+      this.locationDisplay = this.locationQuery
+      this.locationQuery = ''
     },
   }
 }
@@ -151,7 +111,8 @@ export default {
 <template>
 
   <header>
-    <form @submit.prevent class="search-box">
+    <form @submit.prevent class="search-box" style="  max-width: 600px;
+  width: 100%;">
       <div class="search-input">
         <font-awesome-icon icon="fa-solid fa-search" />
 
@@ -159,7 +120,7 @@ export default {
           @keyup.enter="locationQuery.length > 0 ? handleSearch : console.log('error')" />
       </div>
 
-      <button class="search-btn" @click="getLocationCoordinates" :disabled="locationQuery.length === 0"> 
+      <button class="search-btn" @click="handleSearch" :disabled="locationQuery.length === 0">
         <span>Search</span>
         <img src="@/assets/search-icon.svg" alt="" />
       </button>
@@ -172,7 +133,8 @@ export default {
         validLocationQuery }}</span>
 
       <div>
-        <font-awesome-icon icon="fa-solid fa-file-export" size="2x" style="cursor: pointer" />
+        <font-awesome-icon icon="fa-solid fa-file-export" size="2x" style="cursor: pointer"
+          @click="writeHospitalsToFirestore" />
 
         <font-awesome-icon icon="fa-solid fa-share-alt" size="2x" style="cursor: pointer" />
       </div>
@@ -199,10 +161,11 @@ export default {
 
 <style scoped>
 /* Include Font Awesome CSS */
-button:disabled{
+button:disabled {
   cursor: not-allowed;
   opacity: 50%;
 }
+
 /* Add your styles here */
 .search-box {
   display: flex;
@@ -211,7 +174,7 @@ button:disabled{
   gap: 1.8125rem;
   border-radius: 0.9375rem;
   background: #fff;
-
+  margin: 0 auto;
   /* shadow 1 */
   box-shadow: 6px 6px 35px 0px rgba(16, 40, 81, 0.11);
 }
