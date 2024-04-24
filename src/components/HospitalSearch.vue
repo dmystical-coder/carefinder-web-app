@@ -80,7 +80,7 @@ export default {
       this.isLoading = true
       try {
         await axios
-          .get('https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/textsearch/json', {
+          .get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
             params: {
               query: `hospitals in ${this.locationQuery}`,
               key: 'AIzaSyDvtWNeV6bFqQ51ZRl8WDbRi_73OhHs1VU'
